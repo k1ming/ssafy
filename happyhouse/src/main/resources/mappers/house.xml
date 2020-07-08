@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/house.xml -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house"> <!-- mybatis는 namespace필수!! -->
+   <!-- 전체 매물 조회  selectAll -->
+   <select id="selectAll" resultType="HouseDeal"> <!-- resultType속성 필수!! -->
+       select no, dong, AptName, code, dealAmount, buildYear, dealYear, dealMonth, dealDay
+				area, floor, jibun, type, rentMoney
+       where 1=1
+       and type in ('#{type}')
+       <if test="dong != null">
+       and dong like '%#{dong}%'
+       </if>
+       <if test="AptName != null">
+       and AptName like '%#{aptname}%'       
+       </if>
+       limit #{pagestart} #{pageend}
+   </select>
+   
+   <!-- 번호로 매물 조회  select -->
+   <select id="select" resultType="HouseDeal"> <!-- resultType속성 필수!! -->
+       select no, dong, AptName, code, dealAmount, buildYear, dealYear, dealMonth, dealDay
+				area, floor, jibun, type, rentMoney
+		 from housedeal 
+		 where no = #{no}
+   </select>
+   
+   <!-- 게시글 총 갯수 확인 -->
+   <select id="getTotalCount" resultType="HouseDeal"> <!-- resultType속성 필수!! -->
+       select count(no) 
+         from housedeal 
+         where 1=1
+         <if test="dong != null">
+	     and dong like '%#{dong}%'
+	     </if>
+	     <if test="AptName != null">
+	     and AptName like '%#{aptname}%'
+	     </if>   
+   </select>
+   
+</mapper>    
+    
+    
+    
+    
+    
+    

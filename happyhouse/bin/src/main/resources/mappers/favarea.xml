@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/favarea.xml -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="favarea">	<!-- mybatis는 namespace 필수!! -->
+	<!-- 
+		private int memno;
+		private String dongcode;
+	 -->
+	
+	<!-- 입력 -->
+	<insert id="insert">
+		insert into fav_area (memno,dongcode)
+		values (#{memno},#{dongcode})
+	</insert>
+	
+	<!-- 삭제 -->
+	<delete id="delete">
+		delete from fav_area
+		where memno=#{memno}
+		<if test="dongcode != null and dongcode != ''">
+			and dongcode=#{dongcode}
+		</if>
+	</delete>
+	
+	<!-- 수정 -->
+	<update id="update">
+		update fav_area
+		set dongcode=#{dongcode}
+		where memno=#{oldmemno} and dongcode=#{olddongcode}
+	</update>
+	
+	<!-- 전체조회(FavArea) -->
+	<select id="selectAllFav" resultType="FavArea">
+		select memno, dongcode
+		from fav_area
+		where 1=1
+		<if test="memno != 0">
+			and memno=#{memno}
+		</if>
+		<if test="dongcode != null and dongcode != ''">
+			and dongcode=#{dongcode}		
+		</if>
+	</select>
+		
+	<!-- 전체조회(DongCode) -->
+	<select id="selectAllDong" resultType="DongCode">
+		SELECT dongcode.code, dongcode.sido, dongcode.sigungu, dongcode.dong 
+		FROM fav_area, dongcode 
+		WHERE fav_area.dongcode = dongcode.code 
+		AND memno = #{memno}
+	</select>
+	
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.dao.QnADAO">
+
+	<!-- 
+		qna_no as qnaNo,
+		qna_memno as qnaMemno,
+		reply_memno as replyMemno,
+		qna_title as qnaTitle,
+		qna_content as qnaContent,
+		qna_datetime as qnaDatetime,
+		reply as reply,
+		reply_content as replyContent,
+		reply_datetime as replyDatetime,
+	
+		userId as qnaMemid,
+		userId as replyMemid
+	 -->
+
+	<!-- 게시글 전체 조회 -->
+	<select id="selectQnA" resultType="qna">
+		select 
+			qna_no as qnaNo,
+			qna_memno as qnaMemno,
+			reply_memno as replyMemno,
+			qna_title as qnaTitle,
+			qna_content as qnaContent,
+			qna_datetime as qnaDatetime,
+			reply as reply,
+			reply_content as replyContent,
+			reply_datetime as replyDatetime,
+			A.userId as qnaMemid,
+            B.userId as replyMemid
+		 from 
+		 	qna_board 
+         left join 
+         	members as A
+		 on 
+		 	qna_board.qna_memno = A.no
+         left join 
+         	members as B
+         on 
+         	qna_board.reply_memno = B.no
+		 order by 
+		 	qna_no desc
+	</select>
+	
+	<select id="selectQnAByNo" resultType="QnA" parameterType="QnA">
+		select 
+			qna_no as qnaNo,
+			qna_memno as qnaMemno,
+			reply_memno as replyMemno,
+			qna_title as qnaTitle,
+			qna_content as qnaContent,
+			qna_datetime as qnaDatetime,
+			reply as reply,
+			reply_content as replyContent,
+			reply_datetime as replyDatetime,
+			A.userId as qnaMemid,
+            B.userId as replyMemid
+		 from 
+		 	qna_board 
+         left join 
+         	members as A
+		 on 
+		 	qna_board.qna_memno = A.no
+         left join 
+         	members as B
+         on 
+         	qna_board.reply_memno = B.no
+		where 
+			qna_no=#{qnaNo}
+	</select>
+
+	<insert id="insertQ" parameterType="QnA">
+		insert into 
+			qna_board(qna_title  ,qna_content  ,qna_datetime, qna_memno)
+		values 
+			(#{qnaTitle},#{qnaContent},now(),#{qnaMemno})
+	</insert>	
+	
+	<update id="updateQ" parameterType="QnA">
+		update 
+			qna_board
+		set 
+			qna_title=#{qnaTitle},
+			qna_content=#{qnaContent},
+			qna_datetime=now()
+		where 
+			qna_no=#{qnaNo}
+	</update>
+	
+	<delete id="deleteQ" parameterType="int">
+	 	delete from 
+	 		qna_board
+	 	where 
+	 		qna_no=#{qnaNo}
+	</delete>
+	
+	<update id="insertA" parameterType="QnA">
+		update 
+			qna_board
+		set 
+			reply_memno=#{replyMemno},
+			reply_content=#{replyContent},
+			reply_datetime=now(),
+			reply=1
+		where 
+			qna_no=#{qnaNo}
+	</update>	
+
+	<update id="updateA" parameterType="QnA">
+		update 
+			qna_board
+		set 
+			reply_memno=#{replyMemno},
+			reply_content=#{replyContent},
+			reply_datetime=now(),
+			reply=1
+		where 
+			qna_no=#{qnaNo}
+	</update>
+	
+	<update id="deleteA" parameterType="int">
+	 	update 
+	 		qna_board
+		set 
+			reply_memno=null,
+			reply_content=null,
+			reply_datetime=null,
+			reply=0
+		where 
+			qna_no=#{qnaNo}
+	</update>
+
+</mapper>
+

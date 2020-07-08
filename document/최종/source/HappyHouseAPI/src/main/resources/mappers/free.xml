@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.dao.FreeDAO">
+
+	<!-- 게시글 전체 조회 -->
+	<select id="selectFree" resultType="Free">
+		 select 
+			free_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			members.userId as userId
+		 from free_board,members
+         where free_board.memno=members.no
+		 order by no desc
+	</select>
+	
+	<!-- 아이디 검색 조회 -->
+	<select id="searchId" resultType="Free" parameterType="String">
+		select 
+			free_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			members.userId as userId
+		 from free_board,members
+         where 1=1
+         and  free_board.memno=members.no
+         and userId like CONCAT('%', #{word}, '%')	
+	</select>
+	
+	<!-- 제목 검색 조회 -->
+	<select id="searchTitle" resultType="Free" parameterType="String">
+		select 
+			free_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			members.userId as userId
+		 from free_board,members
+         where 1=1
+         and  free_board.memno=members.no
+         and title like CONCAT('%', #{word}, '%')	
+	</select>
+	
+	<!-- 내용 검색 조회 -->
+	<select id="searchContent" resultType="Free" parameterType="String">
+		select 
+			free_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			members.userId as userId
+		 from free_board,members
+         where 1=1
+         and  free_board.memno=members.no
+         and contents like CONCAT('%', #{word}, '%')	
+	</select>
+	
+	<insert id="insertFree" parameterType="Free">
+		insert into free_board(no,title,contents,views,createDate,memno)
+		values (#{no},#{title},#{contents},0,now(),#{memno})
+	</insert>
+	
+	<select id="selectFreeByNo" resultType="Free" parameterType="Free">
+		select free_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			memno,
+			members.userId as userId
+		from free_board,members
+		where free_board.no=#{no}
+		and free_board.memno=members.no
+	</select>
+	
+	<update id="updateView" parameterType="Free">
+		update free_board
+		set views=#{views}+1
+		where no=#{no}
+		
+	</update>
+	
+	<update id="updateFree" parameterType="Free">
+		update free_board
+		set title=#{title},
+			contents=#{contents},
+			createDate=now()
+		where no=#{no}
+	</update>
+	
+	<delete id="deleteFree" parameterType="int">
+	 	delete from free_board
+	 	where no=#{no}
+	</delete>
+
+</mapper>
+

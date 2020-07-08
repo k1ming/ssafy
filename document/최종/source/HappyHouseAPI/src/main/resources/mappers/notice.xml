@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.dao.NoticeDAO">
+
+	<!-- 게시글 전체 조회 -->
+	<select id="selectNotice" resultType="Notice">
+		 select 
+			notice_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			members.userId as userId
+		 from notice_board,members
+         where notice_board.memno=members.no
+		 order by no desc
+	</select>
+	
+	<insert id="insertNotice" parameterType="Notice">
+		insert into notice_board(no,title,contents,views,createDate,memno)
+		values (#{no},#{title},#{contents},0,now(),#{memno})
+	</insert>
+	
+	<select id="selectNoticeByNo" resultType="Notice" parameterType="Notice">
+		select notice_board.no,
+			title,
+			contents,
+			views,
+			createDate,
+			memno,
+			members.userId as userId
+		from notice_board,members
+		where notice_board.no=#{no}
+		and notice_board.memno=members.no
+	</select>
+	
+	<update id="updateView" parameterType="Notice">
+		update notice_board
+		set views=#{views}+1
+		where no=#{no}
+		
+	</update>
+	
+	<update id="updateNotice" parameterType="Notice">
+		update notice_board
+		set title=#{title},
+			contents=#{contents},
+			createDate=now()
+		where no=#{no}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="int">
+	 	delete from notice_board
+	 	where no=#{no}
+	</delete>
+
+</mapper>
+

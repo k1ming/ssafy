@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/dongcode.xml -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dongcode">	<!-- mybatis는 namespace 필수!! -->
+	<!-- 
+		private String code;
+		private String sido;
+		private String sigungu;
+		private String dong;
+		private String dongri;
+	 -->
+	
+	<!-- searchAll -->
+	<select id="searchAll" resultType="DongCode">
+		select code, sido, sigungu, dong, dongri
+		from dongcode
+		where 1=1
+		<if test="sido != null and sido != ''">
+			and sido like concat('%', #{sido},'%')
+		</if>
+		<if test="sigungu != null and sigungu != ''">
+			and sigungu like concat('%', #{sigungu},'%')
+		</if>
+		<if test="dong != null and dong != ''">
+			and dong like concat('%', #{dong},'%')
+		</if>
+		<if test="dongri != null and dongri != ''">
+			and dongri like concat('%', #{dongri},'%')
+		</if>
+		
+	</select>
+	
+	<!-- search -->
+	<select id="search" resultType="DongCode">
+		select code, sido, sigungu, dong, dongri
+		from dongcode
+		where code=#{code}
+	</select>
+	
+	<!-- getSido -->
+	<select id="getSido" resultType="String">
+		select distinct sido
+		from dongcode
+		where 1=1
+	</select>
+	
+	<!-- getSigungu -->
+	<select id="getSigungu" resultType="String">
+		select distinct sigungu
+		from dongcode
+		where sido=#{sido}
+		and sigungu is not null
+		and sigungu != ''
+	</select>
+	
+	<!-- getDong -->
+	<select id="getDong" resultType="String">
+		select distinct dong
+		from dongcode
+		where sido=#{sido}
+		and sigungu=#{sigungu}
+		and dong is not null
+		and dong != ''
+	</select>
+	
+	<!-- getDongri -->
+	<select id="getDongri" resultType="String">
+		select distinct dongri
+		from dongcode
+		where sido=#{sido} 
+		and sigungu=#{sigungu} 
+		and dong=#{dong}
+	</select>
+	
+	<!-- getDongCode -->
+	<select id="getDongCode" resultType="String">
+		select code
+		from dongcode
+		where sido=#{sido}
+		and sigungu=#{sigungu}
+		and dong=#{dong}
+	</select>
+	
+	
+	
+	
+	
+	
+	<!-- 입력 -->
+	<insert id="insert">
+		insert into fav_area (memno,dongcode)
+		values (#{memno},#{dongcode})
+	</insert>
+	
+	<!-- 삭제 -->
+	<delete id="delete">
+		delete from fav_area
+		where memno=#{memno}
+		<if test="dongcode != null and dongcode != ''">
+			and dongcode=#{dongcode}
+		</if>
+	</delete>
+	
+	<!-- 수정 -->
+	<update id="update">
+		update fav_area
+		set dongcode=#{dongcode}
+		where memno=#{oldmemno} and dongcode=#{olddongcode}
+	</update>
+	
+	<!-- 전체조회(FavArea) -->
+	<select id="selectAllFav" resultType="FavArea">
+		select memno, dongcode
+		from fav_area
+		where 1=1
+		<if test="memno != 0">
+			and memno=#{memno}
+		</if>
+		<if test="dongcode != null and dongcode != ''">
+			and dongcode=#{dongcode}		
+		</if>
+	</select>
+		
+	<!-- 전체조회(DongCode) -->
+	<select id="selectAllDong" resultType="DongCode">
+		SELECT dongcode.code, dongcode.sido, dongcode.sigungu, dongcode.dong 
+		FROM fav_area, dongcode 
+		WHERE fav_area.dongcode = dongcode.code 
+		AND memno = #{memno}
+	</select>
+	
+</mapper>

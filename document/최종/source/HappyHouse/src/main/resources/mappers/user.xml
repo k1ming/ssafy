@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/user.xml -->
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user"> <!-- mybatis는 namespace필수!! -->
+	<select id="selectAll" parameterType="Members" resultType="Members">
+		select *
+		from members
+		<if test="name != null and name != ''">
+			where name like #{name}
+		</if>
+		<if test="userId != null and userId != ''">
+			where userId like #{userId}
+		</if>
+		limit #{curPage},#{sizePerPage}
+
+	</select>
+
+	<select id="selectUser" resultType="Members">
+		select no, name, address, phone, userId, password, type
+		from members
+		where 1=1
+		<if test="userId != null and userId != ''">
+			and userId=#{userId}
+		</if>
+		<if test="password != null and password != ''">
+			and password=#{password}
+		</if>
+		<if test="no != null and no != ''">
+			and no=#{no}
+		</if>
+
+	</select>
+
+	<select id="selectId" resultType="Members">
+		select no, name, address, phone, userId, password, type
+		from members
+		where userId=#{userId}
+
+	</select>
+
+	<insert id="insert" parameterType="Members">
+		insert into members(
+		name,address,phone,userId,password,type)
+		values(
+		#{name},
+		#{address},
+		#{phone},
+		#{userId},
+		#{password},
+		#{type}
+		)
+	</insert>
+	<delete id="delete" parameterType="Members">
+		delete from members
+		where no=#{no}
+	</delete>
+	<update id="update" parameterType="Members">
+		update members set
+		password=#{password}, address=#{address}, phone=#{phone}
+		where no=#{no}
+	</update>
+
+	<select id="findPw" parameterType="Members" resultType="Members">
+		select * from members
+		where userId = #{userId}
+		AND name = #{name}
+		AND phone = #{phone}
+
+	</select>
+
+	<select id="getCount" parameterType="Members" resultType="Integer">
+		select count(no) cnt from members
+		<if test="name != null and name != ''">
+			where name like #{name}
+		</if>
+		<if test="userId != null and userId != ''">
+			where userId like #{userId}
+		</if>
+
+	</select>
+</mapper>

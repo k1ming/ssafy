@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/house.xml -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house"> <!-- mybatis는 namespace필수!! -->
+
+	<!-- 전체 매물 조회  selectAll -->
+	<select id="searchAll" parameterType="HousePageBean" resultType="HouseDeal">
+		select
+			no as no,
+			dong as dong,
+			AptName as aptname,
+			code as code,
+			dealAmount as dealAmount,
+			dealAmount as dealAmount, 
+			buildYear as buildYear, 
+			dealYear as dealYear, 
+			dealMonth as dealMonth,
+			dealDay as dealDay, 
+			area as area, 
+			floor as floor, 
+			jibun as jibun,
+			type as type, 
+			rentMoney as rentMoney
+		from
+			housedeal
+		where
+			1=1
+		and
+			type in (
+			<if test="searchType[0] == true">
+				1
+			</if>
+			<if test="searchType[0] == true">
+				<if test="searchType[1] == true or searchType[2] == true or searchType[3] == true">
+					,
+				</if>
+			</if>
+			<if test="searchType[1] == true">
+				2
+			</if>
+			<if test="searchType[1] == true">
+				<if test="searchType[2] == true or searchType[3] == true">
+					,
+				</if>
+			</if>
+			<if test="searchType[2] == true">
+				3
+			</if>
+			<if test="searchType[2] == true and searchType[3] == true">
+				,
+			</if>
+			<if test="searchType[3] == true">
+				4
+			</if>
+			)
+		<if test="dong != null and dong != ''">
+			and dong like CONCAT('%', #{dong}, '%')
+		</if>
+		<if test="aptname != null and aptname != ''">
+			and AptName like CONCAT('%', #{aptname}, '%')
+		</if>
+		limit #{limitStart}, #{limitEnd}
+	</select>
+
+	<!-- 번호로 매물 조회  select -->
+	<select id="search" parameterType="Integer" resultType="HouseDeal">
+		select
+			no as no,
+			dong as dong,
+			AptName as aptname,
+			code as code,
+			dealAmount as dealAmount,
+			dealAmount as dealAmount, 
+			buildYear as buildYear, 
+			dealYear as dealYear, 
+			dealMonth as dealMonth,
+			dealDay as dealDay, 
+			area as area, 
+			floor as floor, 
+			jibun as jibun,
+			type as type, 
+			rentMoney as rentMoney
+		from
+			housedeal
+		where
+			no = #{no}
+	</select>
+
+	<!-- 게시글 총 갯수 확인 -->
+	<select id="getTotalCount" parameterType="HousePageBean" resultType="Integer">
+		select 
+			count(no)
+		from
+			housedeal
+		where
+			1=1
+		and
+			type in (
+			<if test="searchType[0] == true">
+				1
+			</if>
+			<if test="searchType[0] == true">
+				<if test="searchType[1] == true or searchType[2] == true or searchType[3] == true">
+					,
+				</if>
+			</if>
+			<if test="searchType[1] == true">
+				2
+			</if>
+			<if test="searchType[1] == true">
+				<if test="searchType[2] == true or searchType[3] == true">
+					,
+				</if>
+			</if>
+			<if test="searchType[2] == true">
+				3
+			</if>
+			<if test="searchType[2] == true and searchType[3] == true">
+				,
+			</if>
+			<if test="searchType[3] == true">
+				4
+			</if>
+			)
+		<if test="dong != null and dong != ''">
+			and dong like CONCAT('%',#{dong},'%')
+		</if>
+		<if test="aptname != null and aptname != ''">
+			and AptName like CONCAT('%',#{aptname},'%')
+		</if>
+	</select>
+   
+	<select id="getHousesInfo" parameterType="HouseInfo" resultType="HouseInfo">
+   		select
+   			no as no,
+   			dong as dong,
+   			AptName as AptName,
+   			code as code,
+   			buildYear as buildYear,
+   			jibun as jibun,
+   			lat as lat,
+   			lng as lng,
+   			img as img
+   		from
+   			houseinfo
+   		where
+   			1=1
+   		<if test="code != null and code != ''">
+   			and code = #{code}
+   		</if>
+   		<if test="AptName != null and AptName != ''">
+   			and AptName = #{AptName}
+   		</if>
+   		<if test="no != null and no != ''">
+   			and no = #{no}
+   		</if>
+	</select>
+</mapper>    
+    
+    
+    
+    
+    
+    

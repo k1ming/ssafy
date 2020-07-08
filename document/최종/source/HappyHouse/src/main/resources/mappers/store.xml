@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/store.xml -->
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="store">	<!-- mybatis는 namespace 필수!! -->
+	<!-- 
+		private int no;
+		private String shopName;
+		private String localName;
+		private String upjongLCode;
+		private String upjongMCode;
+		private String upjongSCode;
+		private String code4;
+		private String codeName4;
+		private String dongCode;
+		private String jibunAddress;
+		private String address;
+		private int oldPostCode;
+		private int postCode;
+		private String lng;
+		private String lat;
+		
+		private int pageStart;
+		private int pageEnd;
+		
+		no, shopname, localname, upjongLCode, upjongMCode, upjongSCode, code4, codename4, dongcode, jibunaddress, address, oldpostcode, postcode, lng, lat
+	 
+	 	no as no, 
+				shopname as shopName, 
+				localname as localName, 
+				upjongLCode as upjongLCode, 
+				upjongMCode as upjongMCode, 
+				upjongSCode as upjongSCode, 
+				code4 as code4, 
+				codename4 as codeName4, 
+				dongcode as dongCode, 
+				jibunaddress as jibunAddress, 
+				address as address, 
+				oldpostcode as oldPostCode, 
+				postcode as postCode, 
+				lng as lng, 
+				lat as lat
+	 -->
+
+	<!-- searchAll -->
+	<select id="searchAll" resultType="StoreInfo" parameterType="StoreInfo">
+		select 	no as no, 
+				shopname as shopName, 
+				localname as localName, 
+				upjongLCode as upjongLCode, 
+				storeinfo.upjongMCode as upjongMCode, 
+				upjongSCode as upjongSCode, 
+				code4 as code4, 
+				codename4 as codeName4, 
+				dongcode as dongCode, 
+				jibunaddress as jibunAddress, 
+				address as address, 
+				oldpostcode as oldPostCode, 
+				postcode as postCode, 
+				lng as lng, 
+				lat as lat,
+				upjongs.codenm as upjongS
+		from 	storeinfo left join upjongs
+		on		storeinfo.upjongSCode = upjongs.code
+		where 	1=1
+		<if test="dongCode != '' and dongCode != null">
+			and dongcode = #{dongCode}
+		</if>
+		<if test="upjongLCode != '' and upjongLCode != null">
+			and upjongLCode = #{upjongLCode}
+		</if>
+		<if test="upjongMCode != '' and upjongMCode != null">
+			and storeinfo.upjongMCode = #{upjongMCode}
+		</if>
+		<if test="upjongSCode != '' and upjongSCode != null">
+			and upjongSCode = #{upjongSCode}
+		</if>
+		order by no desc
+		limit #{pageStart}, #{pageEnd}
+	</select>
+
+	<!-- getTotalCount -->
+	<select id="getTotalCount" resultType="Integer">
+		select count(no)
+		from storeinfo
+		where 1=1
+		and dongcode = #{dongCode}
+		<if test="upjongLCode != '' and upjongLCode != null and  upjongLCode != 0">
+			and upjongLCode = #{upjongLCode}
+		</if>
+		<if test="upjongMCode != '' and upjongMCode != null and  upjongMCode != 0">
+			and upjongMCode = #{upjongMCode}
+		</if>
+		<if test="upjongSCode != '' and upjongSCode != null">
+			and upjongSCode = #{upjongSCode}
+		</if>
+	</select>
+	
+</mapper>
